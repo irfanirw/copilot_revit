@@ -40,6 +40,11 @@ public static class GeneratedCommand
 
         CodeEditor.Text = DefaultTemplate;
         CodeEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+
+        // Bind F5 to run on the TextArea so it doesn't interfere with editing
+        var runCommand = new RoutedCommand();
+        runCommand.InputGestures.Add(new KeyGesture(Key.F5));
+        CommandBindings.Add(new CommandBinding(runCommand, (s, e) => ExecuteCode()));
     }
 
     private void SetupEditor()
@@ -123,6 +128,14 @@ public static class GeneratedCommand
     private void RunCode_Click(object sender, RoutedEventArgs e)
     {
         ExecuteCode();
+    }
+
+    private void PasteCode_Click(object sender, RoutedEventArgs e)
+    {
+        if (Clipboard.ContainsText())
+        {
+            CodeEditor.Text = Clipboard.GetText();
+        }
     }
 
     private void ClearOutput_Click(object sender, RoutedEventArgs e)

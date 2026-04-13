@@ -63,6 +63,10 @@
                             Background="#A6E3A1" Foreground="#1E1E2E"
                             FontWeight="Bold"
                             Click="RunCode_Click"/>
+                    <Button Content="&#x1F4CB; Paste" 
+                            Style="{StaticResource ToolbarButton}"
+                            Click="PasteCode_Click"
+                            ToolTip="Replace editor content with clipboard text"/>
                     <Button Content="Clear Output" 
                             Style="{StaticResource ToolbarButton}"
                             Click="ClearOutput_Click"/>
@@ -95,8 +99,7 @@
                                    HorizontalScrollBarVisibility="Auto"
                                    VerticalScrollBarVisibility="Auto"
                                    Padding="8"
-                                   BorderThickness="0"
-                                   PreviewKeyDown="CodeEditor_KeyDown"/>
+                                   BorderThickness="0"/>
         </Border>
 
         <!-- Splitter -->
