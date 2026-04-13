@@ -1,6 +1,6 @@
 using Autodesk.Revit.UI;
+using ICSharpCode.AvalonEdit.Highlighting;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -35,55 +35,89 @@ public static class GeneratedCommand
     {
         InitializeComponent();
         _uiApp = uiApp;
+
+        SetupEditor();
+
         CodeEditor.Text = DefaultTemplate;
-        CodeEditor.SelectionChanged += CodeEditor_SelectionChanged;
-        CodeEditor.Loaded += (s, e) => { UpdateLineNumbers(); SyncLineNumberScroll(); };
-        CodeEditor.AddHandler(ScrollViewer.ScrollChangedEvent, new ScrollChangedEventHandler(CodeEditor_ScrollChanged));
+        CodeEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
     }
 
-    private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
+    private void SetupEditor()
     {
-        UpdateLineNumbers();
+        CodeEditor.Options.EnableHyperlinks = false;
+        CodeEditor.Options.EnableEmailHyperlinks = false;
+        CodeEditor.Options.ConvertTabsToSpaces = true;
+        CodeEditor.Options.IndentationSize = 4;
+
+        CodeEditor.LineNumbersForeground = new SolidColorBrush(Color.FromRgb(0x58, 0x5B, 0x70));
+
+        CodeEditor.TextArea.SelectionBrush = new SolidColorBrush(Color.FromArgb(0x80, 0x45, 0x47, 0x5A));
+        CodeEditor.TextArea.SelectionForeground = null;
+
+        ApplyDarkThemeHighlighting();
     }
 
-    private void UpdateLineNumbers()
+    private void ApplyDarkThemeHighlighting()
     {
-        int lineCount = CodeEditor.LineCount;
-        if (lineCount < 1) lineCount = 1;
+        var highlighting = HighlightingManager.Instance.GetDefinition("C#");
+        if (highlighting == null) return;
 
-        var sb = new System.Text.StringBuilder();
-        for (int i = 1; i <= lineCount; i++)
+        foreach (var color in highlighting.NamedHighlightingColors)
         {
-            if (i > 1) sb.AppendLine();
-            sb.Append(i);
+            switch (color.Name)
+            {
+                case "Comment":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0x6C, 0x70, 0x86));
+                    break;
+                case "String":
+                case "Char":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0xA6, 0xE3, 0xA1));
+                    break;
+                case "Preprocessor":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0x94, 0xE2, 0xD5));
+                    break;
+                case "NumberLiteral":
+                case "TrueFalse":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0xFA, 0xB3, 0x87));
+                    break;
+                case "Keywords":
+                case "GotoKeywords":
+                case "ContextKeywords":
+                case "NamespaceKeywords":
+                case "SemanticKeywords":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0xCB, 0xA6, 0xF7));
+                    break;
+                case "ValueTypeKeywords":
+                case "ReferenceTypeKeywords":
+                case "TypeKeywords":
+                case "Modifiers":
+                case "Visibility":
+                case "ParameterModifiers":
+                case "NullOrValueKeywords":
+                case "CheckedKeyword":
+                case "GetSetAddRemove":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0x89, 0xB4, 0xFA));
+                    break;
+                case "ExceptionKeywords":
+                case "UnsafeKeywords":
+                case "ThisOrBaseReference":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0xF3, 0x8B, 0xA8));
+                    break;
+                case "OperatorKeywords":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0x89, 0xDC, 0xFE));
+                    break;
+                case "Punctuation":
+                    color.Foreground = new SimpleHighlightingBrush(Color.FromRgb(0xBA, 0xC2, 0xDE));
+                    break;
+            }
         }
-        LineNumbers.Text = sb.ToString();
+
+        CodeEditor.SyntaxHighlighting = highlighting;
     }
 
-    private void CodeEditor_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    private void Caret_PositionChanged(object? sender, EventArgs e)
     {
-        SyncLineNumberScroll();
-    }
-
-    private void SyncLineNumberScroll()
-    {
-        var scrollViewer = FindChildScrollViewer(CodeEditor);
-        if (scrollViewer != null)
-        {
-            LineNumberScroller.ScrollToVerticalOffset(scrollViewer.VerticalOffset);
-        }
-    }
-
-    private static ScrollViewer? FindChildScrollViewer(DependencyObject parent)
-    {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is ScrollViewer sv) return sv;
-            var result = FindChildScrollViewer(child);
-            if (result != null) return result;
-        }
-        return null;
+        LineColText.Text = $"Ln {CodeEditor.TextArea.Caret.Line}, Col {CodeEditor.TextArea.Caret.Column}";
     }
 
     private void RunCode_Click(object sender, RoutedEventArgs e)
@@ -117,29 +151,6 @@ public static class GeneratedCommand
             ExecuteCode();
             e.Handled = true;
         }
-    }
-
-    private void CodeEditor_SelectionChanged(object sender, RoutedEventArgs e)
-    {
-        int caretIndex = CodeEditor.CaretIndex;
-        string text = CodeEditor.Text;
-
-        int line = 1;
-        int col = 1;
-        for (int i = 0; i < caretIndex && i < text.Length; i++)
-        {
-            if (text[i] == '\n')
-            {
-                line++;
-                col = 1;
-            }
-            else
-            {
-                col++;
-            }
-        }
-
-        LineColText.Text = $"Ln {line}, Col {col}";
     }
 
     private void ExecuteCode()

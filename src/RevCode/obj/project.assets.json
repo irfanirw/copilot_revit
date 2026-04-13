@@ -2,6 +2,22 @@
   "version": 3,
   "targets": {
     "net8.0-windows7.0": {
+      "AvalonEdit/6.3.1.120": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0-windows7.0/ICSharpCode.AvalonEdit.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/ICSharpCode.AvalonEdit.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App"
+        ]
+      },
       "Microsoft.CodeAnalysis.Analyzers/3.3.4": {
         "type": "package",
         "build": {
@@ -180,6 +196,25 @@
     }
   },
   "libraries": {
+    "AvalonEdit/6.3.1.120": {
+      "sha512": "6ASBKPzAg64BLDlFOJo4Ypr1sA/6hB5+TfHLJaZYUSTE0jgxvKlVqKeo/ISTG9qEMxu604qUu6BGugmJkfdrNw==",
+      "type": "package",
+      "path": "avalonedit/6.3.1.120",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "PackageReadme.md",
+        "avalonedit.6.3.1.120.nupkg.sha512",
+        "avalonedit.nuspec",
+        "images/AvalonEditNuGetPackageIcon.png",
+        "lib/net462/ICSharpCode.AvalonEdit.dll",
+        "lib/net462/ICSharpCode.AvalonEdit.xml",
+        "lib/net6.0-windows7.0/ICSharpCode.AvalonEdit.dll",
+        "lib/net6.0-windows7.0/ICSharpCode.AvalonEdit.xml",
+        "lib/net8.0-windows7.0/ICSharpCode.AvalonEdit.dll",
+        "lib/net8.0-windows7.0/ICSharpCode.AvalonEdit.xml"
+      ]
+    },
     "Microsoft.CodeAnalysis.Analyzers/3.3.4": {
       "sha512": "AxkxcPR+rheX0SmvpLVIGLhOUXAKG56a64kV9VQZ4y9gR9ZmPXnqZvHJnmwLSwzrEP6junUF11vuc+aqo5r68g==",
       "type": "package",
@@ -991,6 +1026,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
+      "AvalonEdit >= 6.3.1.120",
       "Microsoft.CodeAnalysis.CSharp >= 4.9.2",
       "Microsoft.CodeAnalysis.Common >= 4.9.2"
     ]
@@ -1038,6 +1074,10 @@
       "net8.0-windows7.0": {
         "targetAlias": "net8.0-windows",
         "dependencies": {
+          "AvalonEdit": {
+            "target": "Package",
+            "version": "[6.3.1.120, )"
+          },
           "Microsoft.CodeAnalysis.CSharp": {
             "target": "Package",
             "version": "[4.9.2, )"
