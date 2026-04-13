@@ -44,3 +44,5 @@ C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\cop
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Release\refint\RevCode.dll
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Release\RevCode.pdb
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Release\ref\RevCode.dll
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\ICSharpCode.AvalonEdit.dll
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Release\RevCode.sourcelink.json
