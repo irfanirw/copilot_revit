@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>RevAI</Name>
+    <Assembly>RevAI\RevAI.dll</Assembly>
+    <FullClassName>RevAI.App</FullClassName>
+    <AddInId>F8C3A1B2-D4E5-6F78-9ABC-DEF012345678</AddInId>
+    <VendorId>IrfanIrwanuddin</VendorId>
+    <VendorDescription>Irfan Irwanuddin - RevAI AI-Powered Revit Assistant</VendorDescription>
+  </AddIn>
+</RevitAddIns>
