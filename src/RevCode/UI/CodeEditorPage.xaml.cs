@@ -1,15 +1,17 @@
 using Autodesk.Revit.UI;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RevCode.UI;
 
-public partial class CodeEditorWindow : Window
+public partial class CodeEditorPage : Page, IDockablePaneProvider
 {
-    private readonly UIApplication _uiApp;
+    private UIApplication? _uiApp;
     private bool _isExecuting;
+    private bool _isInitialized;
 
     private const string DefaultTemplate = @"using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -31,17 +33,33 @@ public static class GeneratedCommand
 }
 ";
 
-    public CodeEditorWindow(UIApplication uiApp)
+    public CodeEditorPage()
     {
         InitializeComponent();
-        _uiApp = uiApp;
 
         SetupEditor();
-
         CodeEditor.Text = DefaultTemplate;
         CodeEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+    }
 
-        // Bind F5 to run on the TextArea so it doesn't interfere with editing
+    public void SetupDockablePane(DockablePaneProviderData data)
+    {
+        data.FrameworkElement = this;
+        data.InitialState = new DockablePaneState
+        {
+            DockPosition = DockPosition.Tabbed,
+            TabBehind = Autodesk.Revit.UI.DockablePanes.BuiltInDockablePanes.PropertiesPalette
+        };
+    }
+
+    public void Initialize(UIApplication uiApp)
+    {
+        if (_isInitialized) return;
+        _isInitialized = true;
+
+        _uiApp = uiApp;
+
+        // Bind F5 to run
         var runCommand = new RoutedCommand();
         runCommand.InputGestures.Add(new KeyGesture(Key.F5));
         CommandBindings.Add(new CommandBinding(runCommand, (s, e) => ExecuteCode()));
@@ -153,8 +171,7 @@ public static class GeneratedCommand
 
     private void PinWindow_Click(object sender, RoutedEventArgs e)
     {
-        Topmost = !Topmost;
-        PinButton.Content = Topmost ? "\U0001F4CC Unpin" : "\U0001F4CC Pin";
+        // No-op: dockable panes are managed by Revit
     }
 
     private void CodeEditor_KeyDown(object sender, KeyEventArgs e)

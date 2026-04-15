@@ -1,0 +1,66 @@
+============================================================
+  RevCode v1.0.0 - Installation Instructions
+  C# Code Editor for Autodesk Revit 2025
+  Author: Irfan Irwanuddin
+============================================================
+
+REQUIREMENTS
+------------
+- Autodesk Revit 2025
+- Windows 10/11
+- .NET 8.0 Runtime (included with Revit 2025)
+
+INSTALLATION
+------------
+1. Close Revit if it is currently running.
+
+2. Right-click "Install-RevCode.ps1" and select "Run with PowerShell".
+
+   Alternatively, open PowerShell and run:
+     powershell -ExecutionPolicy Bypass -File Install-RevCode.ps1
+
+3. Follow the on-screen prompts to confirm installation.
+
+4. Launch Revit 2025. RevCode will appear under the
+   "Code & Automations" tab in the ribbon.
+
+SILENT INSTALLATION
+-------------------
+To install without prompts (e.g. for automated deployment):
+  powershell -ExecutionPolicy Bypass -File Install-RevCode.ps1 -Silent
+
+UNINSTALLATION
+--------------
+To remove RevCode from Revit:
+  powershell -ExecutionPolicy Bypass -File Install-RevCode.ps1 -Uninstall
+
+INSTALL LOCATION
+----------------
+Files are installed to:
+  %APPDATA%\Autodesk\Revit\Addins\2025\RevCode\
+  %APPDATA%\Autodesk\Revit\Addins\2025\RevCode.addin
+
+TROUBLESHOOTING
+---------------
+- "Build output not found" error:
+  Ensure the "bin" folder is present alongside the installer
+  and contains RevCode.dll and its dependencies.
+
+- PowerShell execution policy error:
+  Run the command with -ExecutionPolicy Bypass as shown above.
+
+- Plugin does not appear in Revit:
+  Verify that RevCode.addin exists in:
+    %APPDATA%\Autodesk\Revit\Addins\2025\
+  and that RevCode.dll exists in:
+    %APPDATA%\Autodesk\Revit\Addins\2025\RevCode\
+
+PACKAGE CONTENTS
+----------------
+  RevCode_v1.0.0/
+    Install-RevCode.ps1    - Installer/uninstaller script
+    RevCode.addin          - Revit addin manifest
+    INSTALL.txt            - This file
+    bin/                   - Compiled plugin files (Release build)
+
+============================================================

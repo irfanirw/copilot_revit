@@ -1,7 +1,6 @@
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using RevAI.UI;
 
 namespace RevAI.Commands;
 
@@ -9,20 +8,23 @@ namespace RevAI.Commands;
 [Regeneration(RegenerationOption.Manual)]
 public class ShowChatCommand : IExternalCommand
 {
-    private static ChatWindow? _chatWindow;
-
     public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
     {
         try
         {
-            if (_chatWindow == null || !_chatWindow.IsLoaded)
+            var uiApp = commandData.Application;
+
+            // Initialize the chat page with UIApplication on first use
+            App.InitializeChatPage(uiApp);
+
+            // Toggle the dockable pane
+            var pane = uiApp.GetDockablePane(App.ChatPaneId);
+            if (pane != null)
             {
-                _chatWindow = new ChatWindow(commandData.Application);
-                _chatWindow.Show();
-            }
-            else
-            {
-                _chatWindow.Activate();
+                if (pane.IsShown())
+                    pane.Hide();
+                else
+                    pane.Show();
             }
 
             return Result.Succeeded;

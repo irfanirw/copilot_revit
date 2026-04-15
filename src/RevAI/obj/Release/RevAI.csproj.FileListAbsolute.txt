@@ -39,11 +39,9 @@ C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\cop
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\bin\Release\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\bin\Release\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI.csproj.AssemblyReference.cache
-C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\UI\ChatWindow.g.cs
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\GeneratedInternalTypeHelper.g.cs
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI_MarkupCompile.cache
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI_MarkupCompile.lref
-C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\UI\ChatWindow.baml
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI.g.resources
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI.AssemblyInfoInputs.cache
@@ -54,3 +52,6 @@ C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\cop
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\refint\RevAI.dll
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI.pdb
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\ref\RevAI.dll
+c:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\UI\ChatPage.g.cs
+c:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\UI\ChatPage.baml
+c:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevAI\obj\Release\RevAI.sourcelink.json

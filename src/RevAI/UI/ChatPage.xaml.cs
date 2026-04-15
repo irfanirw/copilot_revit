@@ -12,15 +12,25 @@ using System.Windows.Threading;
 
 namespace RevAI.UI;
 
-public partial class ChatWindow : Window, INotifyPropertyChanged
+public partial class ChatPage : Page, IDockablePaneProvider, INotifyPropertyChanged
 {
-    private readonly UIApplication _uiApp;
-    private readonly AiService _aiService;
+    private UIApplication? _uiApp;
+    private AiService? _aiService;
     private readonly ObservableCollection<ChatMessage> _messages = [];
     private bool _isProcessing;
     private bool _isSettingsVisible;
+    private bool _isInitialized;
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    public void SetupDockablePane(DockablePaneProviderData data)
+    {
+        data.FrameworkElement = this;
+        data.InitialState = new DockablePaneState
+        {
+            DockPosition = DockPosition.Right
+        };
+    }
 
     public bool IsProcessing
     {
@@ -34,18 +44,21 @@ public partial class ChatWindow : Window, INotifyPropertyChanged
         set { _isSettingsVisible = value; OnPropertyChanged(); }
     }
 
-    public ChatWindow(UIApplication uiApp)
+    public ChatPage()
     {
         InitializeComponent();
         DataContext = this;
+    }
+
+    public void Initialize(UIApplication uiApp)
+    {
+        if (_isInitialized) return;
+        _isInitialized = true;
 
         _uiApp = uiApp;
         _aiService = new AiService();
 
         MessagesPanel.ItemsSource = _messages;
-
-        // Handle Ctrl+C/V/A for Revit-hosted WPF (Revit intercepts keyboard shortcuts)
-        PreviewKeyDown += ChatWindow_PreviewKeyDown;
 
         // Load saved settings
         LoadSettings();
@@ -53,22 +66,22 @@ public partial class ChatWindow : Window, INotifyPropertyChanged
         // Welcome message
         _messages.Add(new ChatMessage(
             "assistant",
-            "Welcome to **RevAI**! 🤖\n\n" +
+            "Welcome to **RevAI**! \U0001f916\n\n" +
             "I'm your AI-powered Revit assistant. Choose your preferred AI provider:\n" +
-            "• **M365 Copilot** (Azure OpenAI with SSO)\n" +
-            "• **OpenAI ChatGPT** (API key)\n" +
-            "• **Anthropic Claude** (API key)\n" +
-            "• **Ollama** (offline, local model)\n\n" +
+            "\u2022 **M365 Copilot** (Azure OpenAI with SSO)\n" +
+            "\u2022 **OpenAI ChatGPT** (API key)\n" +
+            "\u2022 **Anthropic Claude** (API key)\n" +
+            "\u2022 **Ollama** (offline, local model)\n\n" +
             "Tell me what you want to do in natural language, and I'll generate and execute the Revit API code for you.\n\n" +
             "**Examples:**\n" +
-            "• \"Count all walls in the model\"\n" +
-            "• \"Create a 10m wall on Level 1\"\n" +
-            "• \"List all rooms with their areas\"\n\n" +
-            "⚙️ Click **Settings** to configure your AI provider."));
+            "\u2022 \"Count all walls in the model\"\n" +
+            "\u2022 \"Create a 10m wall on Level 1\"\n" +
+            "\u2022 \"List all rooms with their areas\"\n\n" +
+            "\u2699\ufe0f Click **Settings** to configure your AI provider."));
 
         if (!_aiService.IsConfigured)
         {
-            _messages.Add(new ChatMessage("system", "⚠️ Not configured. Please open Settings to select your AI provider and enter credentials."));
+            _messages.Add(new ChatMessage("system", "\u26a0\ufe0f Not configured. Please open Settings to select your AI provider and enter credentials."));
         }
     }
 
@@ -86,7 +99,7 @@ public partial class ChatWindow : Window, INotifyPropertyChanged
     private async Task SendMessage()
     {
         var input = InputBox.Text?.Trim();
-        if (string.IsNullOrEmpty(input) || IsProcessing) return;
+        if (string.IsNullOrEmpty(input) || IsProcessing || _aiService == null) return;
 
         InputBox.Text = string.Empty;
         IsProcessing = true;
@@ -307,8 +320,7 @@ public partial class ChatWindow : Window, INotifyPropertyChanged
 
     private void Pin_Click(object sender, RoutedEventArgs e)
     {
-        Topmost = !Topmost;
-        PinButton.Content = Topmost ? "📌 Unpin" : "📌 Pin";
+        // No-op: dockable panes don't support pin/topmost
     }
 
     private void Clear_Click(object sender, RoutedEventArgs e)
@@ -320,51 +332,12 @@ public partial class ChatWindow : Window, INotifyPropertyChanged
 
     private void ChatWindow_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        if (Keyboard.Modifiers != ModifierKeys.Control) return;
-
-        var focused = Keyboard.FocusedElement as IInputElement;
-        if (focused == null) return;
-
-        switch (e.Key)
-        {
-            case Key.V:
-                if (focused is System.Windows.Controls.TextBox || focused is PasswordBox || focused is RichTextBox)
-                {
-                    if (ApplicationCommands.Paste.CanExecute(null, focused))
-                    {
-                        ApplicationCommands.Paste.Execute(null, focused);
-                        e.Handled = true;
-                    }
-                }
-                break;
-            case Key.C:
-                if (focused is System.Windows.Controls.TextBox || focused is RichTextBox)
-                {
-                    if (ApplicationCommands.Copy.CanExecute(null, focused))
-                    {
-                        ApplicationCommands.Copy.Execute(null, focused);
-                        e.Handled = true;
-                    }
-                }
-                break;
-            case Key.A:
-                if (focused is System.Windows.Controls.TextBox textBox)
-                {
-                    textBox.SelectAll();
-                    e.Handled = true;
-                }
-                else if (focused is RichTextBox richTextBox)
-                {
-                    richTextBox.SelectAll();
-                    e.Handled = true;
-                }
-                break;
-        }
+        // Keyboard shortcut handling no longer needed for dockable pane
     }
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        _aiService.Dispose();
+        // No-op: dockable panes are managed by Revit
     }
 
     private void LoadSettings()

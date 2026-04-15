@@ -1,5 +1,6 @@
 using Autodesk.Revit.UI;
 using RevCode.Core;
+using RevCode.UI;
 using System.Reflection;
 using System.Windows.Media.Imaging;
 
@@ -10,14 +11,26 @@ public class App : IExternalApplication
     internal static ExternalEvent? ExternalEvent { get; private set; }
     internal static CodeExecutionHandler? ExecutionHandler { get; private set; }
 
+    internal static readonly DockablePaneId EditorPaneId = new(new Guid("B7D4E2A1-C3F5-4A89-9D1E-FA6078BBCCDD"));
+    private static CodeEditorPage? _editorPage;
+
     public Result OnStartup(UIControlledApplication application)
     {
         ExecutionHandler = new CodeExecutionHandler();
         ExternalEvent = ExternalEvent.Create(ExecutionHandler);
 
+        // Register dockable pane
+        _editorPage = new CodeEditorPage();
+        application.RegisterDockablePane(EditorPaneId, "RevCode - C# Editor", _editorPage);
+
         CreateRibbonUI(application);
 
         return Result.Succeeded;
+    }
+
+    internal static void InitializeEditorPage(UIApplication uiApp)
+    {
+        _editorPage?.Initialize(uiApp);
     }
 
     public Result OnShutdown(UIControlledApplication application)

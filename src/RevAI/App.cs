@@ -1,5 +1,6 @@
 using Autodesk.Revit.UI;
 using RevAI.Core;
+using RevAI.UI;
 using System.Reflection;
 using System.Windows.Media.Imaging;
 
@@ -11,6 +12,9 @@ public class App : IExternalApplication
     internal static RevitCodeExecutionHandler? ExecutionHandler { get; private set; }
     internal static UIControlledApplication? UiControlledApp { get; private set; }
 
+    internal static readonly DockablePaneId ChatPaneId = new(new Guid("A1B2C3D4-E5F6-4A89-9D1E-FA6078AABBCC"));
+    private static ChatPage? _chatPage;
+
     public Result OnStartup(UIControlledApplication application)
     {
         UiControlledApp = application;
@@ -19,10 +23,19 @@ public class App : IExternalApplication
         ExecutionHandler = new RevitCodeExecutionHandler();
         ExternalEvent = ExternalEvent.Create(ExecutionHandler);
 
+        // Register dockable pane
+        _chatPage = new ChatPage();
+        application.RegisterDockablePane(ChatPaneId, "RevAI - AI Assistant", _chatPage);
+
         // Create the ribbon tab and panel
         CreateRibbonUI(application);
 
         return Result.Succeeded;
+    }
+
+    internal static void InitializeChatPage(UIApplication uiApp)
+    {
+        _chatPage?.Initialize(uiApp);
     }
 
     public Result OnShutdown(UIControlledApplication application)
