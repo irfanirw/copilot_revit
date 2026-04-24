@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Irfan Irwanuddin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f68ce2a893c5a3bcb701b313363f50c0cb1ed276")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c206cb7cdbf98168e0c79d5eaf0722c5efcb752c")]
 [assembly: System.Reflection.AssemblyProductAttribute("RevCopilot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RevCopilot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

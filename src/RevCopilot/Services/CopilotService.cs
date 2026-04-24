@@ -47,6 +47,10 @@ public class CopilotService : IDisposable
         }
     }
 
+    private IntPtr _parentWindowHandle = IntPtr.Zero;
+
+    public void SetParentWindowHandle(IntPtr handle) => _parentWindowHandle = handle;
+
     public CopilotService(AuthService authService)
     {
         _authService = authService;
@@ -137,7 +141,7 @@ public class CopilotService : IDisposable
 
     private async Task SetBearerTokenAsync(CancellationToken ct)
     {
-        var token = await _authService.GetAccessTokenAsync(ct);
+        var token = await _authService.GetAccessTokenAsync(_parentWindowHandle, ct);
         _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", token);
     }

@@ -131,11 +131,19 @@ public class AuthService : IDisposable
     /// Returns a valid access token. Attempts silent refresh first;
     /// falls back to interactive browser sign-in.
     /// </summary>
-    public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default)
+    /// <param name="parentWindowHandle">
+    /// Win32 HWND of the host window. Required when running inside Revit so the
+    /// authentication browser popup is correctly parented (preventing it from
+    /// appearing behind the main window or being lost).
+    /// Pass <see cref="IntPtr.Zero"/> to let MSAL choose.
+    /// </param>
+    public async Task<string> GetAccessTokenAsync(
+        IntPtr parentWindowHandle = default,
+        CancellationToken cancellationToken = default)
     {
         if (!IsConfigured)
             throw new InvalidOperationException(
-                "RevCopilot is not configured.\nPlease open Settings and enter your Azure AD Client ID.");
+                "RevCopilot is not configured.\nPlease open ⚙ Settings and enter your Azure AD Client ID.");
 
         if (_msalClient == null) BuildMsalClient();
 
@@ -164,11 +172,17 @@ public class AuthService : IDisposable
             // Fall through to interactive flow
         }
 
-        // 3. Interactive sign-in (opens the system browser)
-        var interactiveResult = await _msalClient
+        // 3. Interactive sign-in — open system browser.
+        //    WithParentActivityOrWindow is required inside Revit's Win32 host;
+        //    without it the auth popup appears behind Revit and looks frozen.
+        var builder = _msalClient
             .AcquireTokenInteractive(GraphScopes)
-            .WithPrompt(Prompt.SelectAccount)
-            .ExecuteAsync(cancellationToken);
+            .WithPrompt(Prompt.SelectAccount);
+
+        if (parentWindowHandle != IntPtr.Zero)
+            builder = builder.WithParentActivityOrWindow(parentWindowHandle);
+
+        var interactiveResult = await builder.ExecuteAsync(cancellationToken);
 
         StoreResult(interactiveResult);
         await FetchUserProfileAsync(interactiveResult.AccessToken);

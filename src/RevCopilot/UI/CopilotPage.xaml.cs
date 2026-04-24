@@ -3,12 +3,14 @@ using RevCopilot.Models;
 using RevCopilot.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace RevCopilot.UI;
 
@@ -18,8 +20,8 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
     // State
     // -----------------------------------------------------------------------
     private UIApplication? _uiApp;
-    private AuthService?   _authService;
-    private CopilotService? _copilotService;
+    private readonly AuthService    _authService    = new();
+    private readonly CopilotService _copilotService;
 
     private readonly ObservableCollection<ChatMessage> _messages = [];
     private bool _isInitialized;
@@ -81,8 +83,22 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
     public CopilotPage()
     {
+        _copilotService = new CopilotService(_authService);
         InitializeComponent();
         DataContext = this;
+
+        // Pre-load saved config so credentials survive without hitting Initialize()
+        Loaded += CopilotPage_Loaded;
+    }
+
+    private void CopilotPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        var config = LoadConfig();
+        ClientIdBox.Text = config.ClientId;
+        TenantIdBox.Text = config.TenantId;
+
+        if (!string.IsNullOrWhiteSpace(config.ClientId))
+            _authService.Configure(config.ClientId, config.TenantId);
     }
 
     // -----------------------------------------------------------------------
@@ -95,21 +111,29 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
         _isInitialized = true;
 
         _uiApp = uiApp;
-        _authService    = new AuthService();
-        _copilotService = new CopilotService(_authService);
 
         MessagesPanel.ItemsSource = _messages;
 
-        // Restore saved config
+        // Ensure config is applied (may already be done from CopilotPage_Loaded)
         var config = LoadConfig();
-        ClientIdBox.Text  = config.ClientId;
-        TenantIdBox.Text  = config.TenantId;
+        if (!string.IsNullOrWhiteSpace(config.ClientId))
+        {
+            _authService.Configure(config.ClientId, config.TenantId);
+            if (!string.IsNullOrEmpty(config.DefaultAgentId))
+                _copilotService.SelectedAgentId = config.DefaultAgentId;
+        }
+
+        // Propagate the Revit main window handle so MSAL can parent its popup
+        var hwnd = GetRevitWindowHandle();
+        _copilotService.SetParentWindowHandle(hwnd);
+
+        UpdateUserInfoDisplay();
 
         if (string.IsNullOrWhiteSpace(config.ClientId))
         {
-            // No app registered yet — show settings immediately
+            // No app registered yet — open settings immediately
             IsSettingsVisible = true;
-            IsSignInPromptVisible = false; // show message area with welcome msg instead
+            IsSignInPromptVisible = false;
             AddSystemMessage(
                 "👋 Welcome to RevCopilot!\n\n" +
                 "To get started:\n" +
@@ -118,20 +142,14 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
                 "3. Enter your Client ID and Tenant ID\n" +
                 "4. Click 'Save & Sign In'\n\n" +
                 "You will be redirected to your browser to sign in with your M365 account.");
-            IsSignInPromptVisible = false;
+        }
+        else if (_authService.IsSignedIn)
+        {
+            ShowChatReady();
         }
         else
         {
-            _authService.Configure(config.ClientId, config.TenantId);
-            if (!string.IsNullOrEmpty(config.DefaultAgentId))
-                _copilotService.SelectedAgentId = config.DefaultAgentId;
-
-            UpdateUserInfoDisplay();
-
-            if (_authService.IsSignedIn)
-                ShowChatReady();
-            else
-                IsSignInPromptVisible = true;
+            IsSignInPromptVisible = true;
         }
     }
 
@@ -148,7 +166,7 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
     private void NewChat_Click(object sender, RoutedEventArgs e)
     {
-        _copilotService?.NewConversation();
+        _copilotService.NewConversation();
         _messages.Clear();
         AddSystemMessage("New conversation started. How can Copilot help you today?");
     }
@@ -179,8 +197,8 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
         SaveConfig(config);
 
-        _authService!.Configure(config.ClientId, config.TenantId);
-        _copilotService!.SelectedAgentId = config.DefaultAgentId;
+        _authService.Configure(config.ClientId, config.TenantId);
+        _copilotService.SelectedAgentId = config.DefaultAgentId;
         _copilotService.NewConversation();
 
         IsSettingsVisible = false;
@@ -190,8 +208,6 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
     private async void SignOut_Click(object sender, RoutedEventArgs e)
     {
-        if (_authService == null) return;
-
         await _authService.SignOutAsync();
         _messages.Clear();
         IsSignInPromptVisible = true;
@@ -207,7 +223,6 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
     private void AgentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_copilotService == null) return;
         if (AgentComboBox.SelectedItem is CopilotAgent agent)
         {
             _copilotService.SelectedAgentId = agent.IsDefault ? null : agent.Id;
@@ -226,33 +241,77 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
     private async Task SignInAsync()
     {
-        if (_authService == null) return;
-
         if (!_authService.IsConfigured)
         {
             IsSettingsVisible = true;
-            AddSystemMessage("⚠ Please configure your Azure AD app in Settings before signing in.");
+            IsSignInPromptVisible = false;
+            AddSystemMessage(
+                "⚠ No Azure AD app configured.\n\n" +
+                "Open ⚙ Settings, enter your Client ID, then click 'Save & Sign In'.");
             return;
         }
 
         IsProcessing = true;
-        StatusText.Text = "Opening sign-in browser…";
+        IsSignInPromptVisible = false;
+        AddSystemMessage("Opening Microsoft sign-in in your browser… please complete sign-in there.");
+        StatusText.Text = "Waiting for browser sign-in…";
+        ScrollToBottom();
 
         try
         {
-            await _authService.GetAccessTokenAsync();
+            // Get the Revit window handle so MSAL parents the browser popup correctly
+            var hwnd = GetRevitWindowHandle();
+            _copilotService.SetParentWindowHandle(hwnd);
+
+            await _authService.GetAccessTokenAsync(hwnd);
             UpdateUserInfoDisplay();
             ShowChatReady();
         }
+        catch (OperationCanceledException)
+        {
+            AddSystemMessage("Sign-in was cancelled.");
+            IsSignInPromptVisible = true;
+        }
         catch (Exception ex)
         {
-            AddSystemMessage($"❌ Sign-in failed: {ex.Message}");
+            AddSystemMessage(
+                $"❌ Sign-in failed: {ex.Message}\n\n" +
+                "Common causes:\n" +
+                "• Client ID is incorrect\n" +
+                "• Redirect URI 'http://localhost' not added in Azure portal\n" +
+                "• Required permissions not granted (User.Read, Chat.ReadWrite)\n" +
+                "• Admin consent required by your organisation");
             IsSignInPromptVisible = true;
         }
         finally
         {
             IsProcessing = false;
         }
+    }
+
+    /// <summary>
+    /// Returns the Win32 HWND for Revit's main window.
+    /// Needed so MSAL parents the browser authentication popup correctly.
+    /// </summary>
+    private IntPtr GetRevitWindowHandle()
+    {
+        // 1. Try the WPF Window that hosts this Page
+        try
+        {
+            var window = Window.GetWindow(this);
+            if (window != null)
+                return new WindowInteropHelper(window).Handle;
+        }
+        catch { }
+
+        // 2. Fall back to the current process main window
+        try
+        {
+            return Process.GetCurrentProcess().MainWindowHandle;
+        }
+        catch { }
+
+        return IntPtr.Zero;
     }
 
     // -----------------------------------------------------------------------
@@ -273,7 +332,7 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
     private async Task SendMessageAsync()
     {
         var text = InputBox.Text?.Trim();
-        if (string.IsNullOrEmpty(text) || IsProcessing || _copilotService == null) return;
+        if (string.IsNullOrEmpty(text) || IsProcessing) return;
 
         InputBox.Text = string.Empty;
         IsProcessing  = true;
@@ -308,7 +367,7 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
         IsSignInPromptVisible = false;
         _messages.Clear();
         AddSystemMessage(
-            $"✅ Signed in as {_authService!.UserDisplayName ?? _authService.UserEmail ?? "unknown"}.\n\n" +
+            $"✅ Signed in as {_authService.UserDisplayName ?? _authService.UserEmail ?? "unknown"}.\n\n" +
             "You can now chat with Microsoft 365 Copilot. Ask anything — about your documents, " +
             "emails, tasks, or anything else Copilot can help with.\n\n" +
             "Tip: Use ⚙ Settings to switch to a specific Copilot Studio agent.");
@@ -319,7 +378,6 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
     private void UpdateUserInfoDisplay()
     {
-        if (_authService == null) return;
         UserInfoText.Text = _authService.IsSignedIn
             ? _authService.UserEmail ?? _authService.UserDisplayName ?? "Signed in"
             : "Not signed in";
@@ -332,7 +390,6 @@ public partial class CopilotPage : Page, IDockablePaneProvider, INotifyPropertyC
 
     private async Task LoadAgentsIntoComboAsync()
     {
-        if (_copilotService == null || _authService == null) return;
         if (!_authService.IsSignedIn) return;
 
         try
