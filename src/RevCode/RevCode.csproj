@@ -56,4 +56,24 @@
     </None>
   </ItemGroup>
 
+  <!--
+    Move Roslyn DLLs to a libs/ sub-folder so they are NOT in the assembly
+    probing root. This prevents the default AssemblyLoadContext from binding
+    them before Dynamo (or other plugins) can load their own copy, which would
+    cause "Assembly with same name is already loaded" when Dynamo calls
+    Assembly.LoadFrom() on its Roslyn DLLs from a different path.
+    App.cs registers an AssemblyResolve handler that loads from libs/ on demand.
+  -->
+  <Target Name="IsolateRoslynAssemblies" AfterTargets="Build">
+    <ItemGroup>
+      <RoslynToIsolate Include="$(OutputPath)Microsoft.CodeAnalysis.dll"        Condition="Exists('$(OutputPath)Microsoft.CodeAnalysis.dll')" />
+      <RoslynToIsolate Include="$(OutputPath)Microsoft.CodeAnalysis.CSharp.dll"  Condition="Exists('$(OutputPath)Microsoft.CodeAnalysis.CSharp.dll')" />
+      <!-- AvalonEdit is also shipped by Dynamo; keep it out of the probing root
+           so the Default ALC doesn't bind our copy before Dynamo loads its own. -->
+      <RoslynToIsolate Include="$(OutputPath)ICSharpCode.AvalonEdit.dll"         Condition="Exists('$(OutputPath)ICSharpCode.AvalonEdit.dll')" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutputPath)libs\" />
+    <Move SourceFiles="@(RoslynToIsolate)" DestinationFolder="$(OutputPath)libs\" />
+  </Target>
+
 </Project>

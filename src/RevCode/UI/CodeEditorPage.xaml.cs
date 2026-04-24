@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace RevCode.UI;
 
@@ -12,6 +13,8 @@ public partial class CodeEditorPage : Page, IDockablePaneProvider
     private UIApplication? _uiApp;
     private bool _isExecuting;
     private bool _isInitialized;
+    private DispatcherTimer? _progressTimer;
+    private double _progressValue;
 
     private const string DefaultTemplate = @"using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -174,6 +177,15 @@ public static class GeneratedCommand
         // No-op: dockable panes are managed by Revit
     }
 
+    private void ToggleWordWrap_Click(object sender, RoutedEventArgs e)
+    {
+        bool wrap = WordWrapButton.IsChecked == true;
+        CodeEditor.WordWrap = wrap;
+        CodeEditor.HorizontalScrollBarVisibility = wrap
+            ? ScrollBarVisibility.Disabled
+            : ScrollBarVisibility.Auto;
+    }
+
     private void CodeEditor_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.F5)
@@ -196,6 +208,7 @@ public static class GeneratedCommand
 
         _isExecuting = true;
         StatusText.Text = "Executing...";
+        StartProgress();
 
         var handler = App.ExecutionHandler;
         var externalEvent = App.ExternalEvent;
@@ -222,11 +235,55 @@ public static class GeneratedCommand
                     AppendOutput($"❌ {result}");
                     StatusText.Text = "Execution failed";
                 }
+                CompleteProgress(success);
                 _isExecuting = false;
             });
         });
 
         externalEvent.Raise();
+    }
+
+    private void StartProgress()
+    {
+        _progressValue = 0;
+        ExecutionProgress.Value = 0;
+        ExecutionProgress.Foreground = new SolidColorBrush(Color.FromRgb(0xA6, 0xE3, 0xA1));
+        ExecutionProgress.Visibility = Visibility.Visible;
+        ProgressText.Text = "0%";
+
+        _progressTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(80) };
+        _progressTimer.Tick += (s, e) =>
+        {
+            double increment = _progressValue < 30 ? 3.0 : 0.4;
+            _progressValue = Math.Min(_progressValue + increment, 85);
+            ExecutionProgress.Value = _progressValue;
+            ProgressText.Text = $"{(int)_progressValue}%";
+        };
+        _progressTimer.Start();
+    }
+
+    private void CompleteProgress(bool success)
+    {
+        _progressTimer?.Stop();
+        _progressTimer = null;
+
+        _progressValue = 100;
+        ExecutionProgress.Value = 100;
+        ExecutionProgress.Foreground = success
+            ? new SolidColorBrush(Color.FromRgb(0xA6, 0xE3, 0xA1))
+            : new SolidColorBrush(Color.FromRgb(0xF3, 0x8B, 0xA8));
+        ProgressText.Text = "100%";
+
+        var resetTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1500) };
+        resetTimer.Tick += (s, e) =>
+        {
+            resetTimer.Stop();
+            ExecutionProgress.Value = 0;
+            ExecutionProgress.Visibility = Visibility.Collapsed;
+            ProgressText.Text = string.Empty;
+            ExecutionProgress.Foreground = new SolidColorBrush(Color.FromRgb(0xA6, 0xE3, 0xA1));
+        };
+        resetTimer.Start();
     }
 
     private void AppendOutput(string text)

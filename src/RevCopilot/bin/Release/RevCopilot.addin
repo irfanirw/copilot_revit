@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>RevCopilot</Name>
+    <Assembly>RevCopilot\RevCopilot.dll</Assembly>
+    <FullClassName>RevCopilot.App</FullClassName>
+    <AddInId>C3D4E5F6-A7B8-4C9D-0E1F-2A3B4C5D6E7F</AddInId>
+    <VendorId>IrfanIrwanuddin</VendorId>
+    <VendorDescription>Irfan Irwanuddin - RevCopilot: Microsoft 365 Copilot for Revit</VendorDescription>
+  </AddIn>
+</RevitAddIns>

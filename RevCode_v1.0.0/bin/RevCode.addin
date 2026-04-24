@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>RevCode</Name>
+    <Assembly>RevCode\RevCode.dll</Assembly>
+    <FullClassName>RevCode.App</FullClassName>
+    <AddInId>B7D4E2A1-C3F5-4A89-9D1E-FA6078234567</AddInId>
+    <VendorId>IrfanIrwanuddin</VendorId>
+    <VendorDescription>Irfan Irwanuddin - RevCode C# Code Editor for Revit</VendorDescription>
+  </AddIn>
+</RevitAddIns>

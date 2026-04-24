@@ -111,6 +111,19 @@ public class AiService : IDisposable
         double meters = UnitUtils.ConvertFromInternalUnits(feetValue, UnitTypeId.Meters);
         double feet = UnitUtils.ConvertToInternalUnits(meterValue, UnitTypeId.Meters);
 
+        // Curtain wall panels — use Panel class and OST_CurtainWallPanels category.
+        // NOTE: 'CurtainPanel' does NOT exist in the Revit API. Use 'Panel' instead.
+        // NOTE: 'BuiltInParameter.CURTAIN_PANEL_AREA' does NOT exist. Use HOST_AREA_COMPUTED.
+        var curtainPanels = new FilteredElementCollector(doc)
+            .OfCategory(BuiltInCategory.OST_CurtainWallPanels)
+            .WhereElementIsNotElementType()
+            .OfType<Panel>()
+            .ToList();
+        // Get area of a curtain panel:
+        Parameter areaParam = panel.get_Parameter(BuiltInParameter.HOST_AREA_COMPUTED);
+        double areaInternalUnits = areaParam?.AsDouble() ?? 0.0;
+        double areaSqMeters = UnitUtils.ConvertFromInternalUnits(areaInternalUnits, UnitTypeId.SquareMeters);
+
         EXAMPLE - Count all walls:
         ```csharp
         public static class GeneratedCommand

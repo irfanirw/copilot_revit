@@ -32,8 +32,6 @@ C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\cop
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Debug\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Debug\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\RevCode.csproj.AssemblyReference.cache
-C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\UI\CodeEditorWindow.baml
-C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\UI\CodeEditorWindow.g.cs
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\RevCode_MarkupCompile.cache
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\RevCode.g.resources
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\RevCode.GeneratedMSBuildEditorConfig.editorconfig
@@ -46,3 +44,5 @@ C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\cop
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\refint\RevCode.dll
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\RevCode.pdb
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\ref\RevCode.dll
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\UI\CodeEditorPage.baml
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Debug\UI\CodeEditorPage.g.cs

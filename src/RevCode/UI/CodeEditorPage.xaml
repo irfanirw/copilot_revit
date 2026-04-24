@@ -39,6 +39,46 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="ToolbarToggleButton" TargetType="ToggleButton">
+            <Setter Property="Background" Value="#45475A"/>
+            <Setter Property="Foreground" Value="#CDD6F4"/>
+            <Setter Property="BorderBrush" Value="#585B70"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#585B70"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#6C7086"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="#313244"/>
+                                <Setter Property="BorderBrush" Value="#89B4FA"/>
+                                <Setter Property="Foreground" Value="#89B4FA"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -69,6 +109,10 @@
                     <Button Content="Clear Code" 
                             Style="{StaticResource ToolbarButton}"
                             Click="ClearCode_Click"/>
+                    <ToggleButton x:Name="WordWrapButton" Content="&#x21B5; Word Wrap"
+                                  Style="{StaticResource ToolbarToggleButton}"
+                                  Click="ToggleWordWrap_Click"
+                                  ToolTip="Toggle word wrap in editor"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                     <Button x:Name="PinButton" Content="&#x1F4CC; Pin" 
@@ -125,15 +169,27 @@
         </Grid>
 
         <!-- Status Bar -->
-        <Border Grid.Row="4" Background="#181825" Padding="8,4">
-            <DockPanel>
-                <TextBlock x:Name="StatusText" Text="Ready" 
-                           Foreground="#6C7086" FontSize="11"
-                           DockPanel.Dock="Left"/>
-                <TextBlock x:Name="LineColText" Text="" 
-                           Foreground="#6C7086" FontSize="11"
-                           HorizontalAlignment="Right" DockPanel.Dock="Right"/>
-            </DockPanel>
+        <Border Grid.Row="4" Background="#181825">
+            <StackPanel>
+                <ProgressBar x:Name="ExecutionProgress"
+                             Height="3"
+                             Minimum="0" Maximum="100" Value="0"
+                             Background="#181825"
+                             Foreground="#A6E3A1"
+                             BorderThickness="0"
+                             Visibility="Collapsed"/>
+                <DockPanel Margin="8,4">
+                    <TextBlock x:Name="StatusText" Text="Ready" 
+                               Foreground="#6C7086" FontSize="11"
+                               DockPanel.Dock="Left"/>
+                    <TextBlock x:Name="ProgressText" Text=""
+                               Foreground="#A6E3A1" FontSize="11"
+                               DockPanel.Dock="Left" Margin="8,0,0,0"/>
+                    <TextBlock x:Name="LineColText" Text="" 
+                               Foreground="#6C7086" FontSize="11"
+                               HorizontalAlignment="Right" DockPanel.Dock="Right"/>
+                </DockPanel>
+            </StackPanel>
         </Border>
     </Grid>
 </Page>
