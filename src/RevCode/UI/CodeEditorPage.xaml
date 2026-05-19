@@ -10,10 +10,10 @@
             <Setter Property="Foreground" Value="#CDD6F4"/>
             <Setter Property="BorderBrush" Value="#585B70"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="2,0"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="11"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -45,10 +45,10 @@
             <Setter Property="Foreground" Value="#CDD6F4"/>
             <Setter Property="BorderBrush" Value="#585B70"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="2,0"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="11"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
@@ -103,13 +103,21 @@
                             Style="{StaticResource ToolbarButton}"
                             Click="PasteCode_Click"
                             ToolTip="Replace editor content with clipboard text"/>
-                    <Button Content="Clear Output" 
+                    <Button Content="&#x1F4BE; Save" 
+                            Style="{StaticResource ToolbarButton}"
+                            Click="SaveCode_Click"
+                            ToolTip="Save code to a .cs file"/>
+                    <Button Content="&#x1F4C2; Load" 
+                            Style="{StaticResource ToolbarButton}"
+                            Click="LoadCode_Click"
+                            ToolTip="Load code from a .cs file"/>
+                    <Button Content="Clear Out" 
                             Style="{StaticResource ToolbarButton}"
                             Click="ClearOutput_Click"/>
                     <Button Content="Clear Code" 
                             Style="{StaticResource ToolbarButton}"
                             Click="ClearCode_Click"/>
-                    <ToggleButton x:Name="WordWrapButton" Content="&#x21B5; Word Wrap"
+                    <ToggleButton x:Name="WordWrapButton" Content="&#x21B5; Wrap"
                                   Style="{StaticResource ToolbarToggleButton}"
                                   Click="ToggleWordWrap_Click"
                                   ToolTip="Toggle word wrap in editor"/>

@@ -1,5 +1,7 @@
 using Autodesk.Revit.UI;
 using ICSharpCode.AvalonEdit.Highlighting;
+using Microsoft.Win32;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -175,6 +177,39 @@ public static class GeneratedCommand
     private void PinWindow_Click(object sender, RoutedEventArgs e)
     {
         // No-op: dockable panes are managed by Revit
+    }
+
+    private void SaveCode_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = "Save Code",
+            Filter = "C# Files (*.cs)|*.cs|All Files (*.*)|*.*",
+            DefaultExt = ".cs",
+            FileName = "RevCode"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            File.WriteAllText(dialog.FileName, CodeEditor.Text);
+            StatusText.Text = $"Saved: {Path.GetFileName(dialog.FileName)}";
+        }
+    }
+
+    private void LoadCode_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = "Load Code",
+            Filter = "C# Files (*.cs)|*.cs|All Files (*.*)|*.*",
+            DefaultExt = ".cs"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            CodeEditor.Text = File.ReadAllText(dialog.FileName);
+            StatusText.Text = $"Loaded: {Path.GetFileName(dialog.FileName)}";
+        }
     }
 
     private void ToggleWordWrap_Click(object sender, RoutedEventArgs e)

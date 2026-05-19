@@ -19,6 +19,7 @@ $ErrorActionPreference = "Stop"
 
 # ---- Configuration ----
 $AppName        = "RevAI"
+$AppVersion     = "1.0.0"
 $RevitVersion   = "2025"
 $AddinsRoot     = Join-Path $env:APPDATA "Autodesk\Revit\Addins\$RevitVersion"
 $PluginFolder   = Join-Path $AddinsRoot $AppName
@@ -30,7 +31,8 @@ $SourceDir      = Join-Path $ScriptDir "src\RevAI\bin\Release"
 function Write-Banner {
     Write-Host ""
     Write-Host "  ======================================" -ForegroundColor Cyan
-    Write-Host "    RevAI - AI-Powered Revit Assistant"   -ForegroundColor Cyan
+    Write-Host "    RevAI v$AppVersion"                   -ForegroundColor Cyan
+    Write-Host "    AI-Powered Revit Assistant"           -ForegroundColor Cyan
     Write-Host "    Installer for Revit $RevitVersion"    -ForegroundColor Cyan
     Write-Host "  ======================================" -ForegroundColor Cyan
     Write-Host ""
@@ -52,7 +54,7 @@ function Test-RevitRunning {
 # ---- Uninstall ----
 if ($Uninstall) {
     Write-Banner
-    Write-Host "  Uninstalling $AppName..." -ForegroundColor Yellow
+    Write-Host "  Uninstalling $AppName v$AppVersion..." -ForegroundColor Yellow
     Test-RevitRunning
 
     $removed = $false
@@ -91,6 +93,7 @@ if (-not (Test-Path (Join-Path $SourceDir "$AppName.dll"))) {
     Write-Host ""
     Write-Host "  Please build the solution first:" -ForegroundColor Yellow
     Write-Host "    dotnet build RevAI.sln -c Release" -ForegroundColor White
+    Write-Host "  or:  msbuild RevAI.sln /p:Configuration=Release" -ForegroundColor White
     Write-Host ""
     if (-not $Silent) { Read-Host "  Press Enter to exit" }
     exit 1
@@ -167,7 +170,7 @@ Write-Host "  ======================================" -ForegroundColor Green
 Write-Host "    Installation complete!" -ForegroundColor Green
 Write-Host "  ======================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "  Launch Revit $RevitVersion to use RevAI." -ForegroundColor White
+Write-Host "  Launch Revit $RevitVersion to use RevAI v$AppVersion." -ForegroundColor White
 Write-Host "  The plugin will appear under the 'Code & Automations' tab." -ForegroundColor White
 Write-Host ""
 
