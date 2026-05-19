@@ -64,6 +64,9 @@ public static class GeneratedCommand
 
         _uiApp = uiApp;
 
+        // Subscribe to gallery load requests
+        App.ScriptLoadRequested += LoadScriptContent;
+
         // Bind F5 to run
         var runCommand = new RoutedCommand();
         runCommand.InputGestures.Add(new KeyGesture(Key.F5));
@@ -196,6 +199,32 @@ public static class GeneratedCommand
         }
     }
 
+    private void SaveToGallery_Click(object sender, RoutedEventArgs e)
+    {
+        var code = CodeEditor.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(code))
+        {
+            StatusText.Text = "Nothing to save.";
+            return;
+        }
+
+        var dialog = new SaveFileDialog
+        {
+            Title = "Save to Gallery",
+            Filter = "C# Script (*.cs)|*.cs",
+            DefaultExt = ".cs",
+            InitialDirectory = App.ScriptsFolder,
+            FileName = "MyScript"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            Directory.CreateDirectory(App.ScriptsFolder);
+            File.WriteAllText(dialog.FileName, code);
+            StatusText.Text = $"Saved to gallery: {Path.GetFileNameWithoutExtension(dialog.FileName)}";
+        }
+    }
+
     private void LoadCode_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new OpenFileDialog
@@ -210,6 +239,16 @@ public static class GeneratedCommand
             CodeEditor.Text = File.ReadAllText(dialog.FileName);
             StatusText.Text = $"Loaded: {Path.GetFileName(dialog.FileName)}";
         }
+    }
+
+    /// <summary>Called by App.ScriptLoadRequested (raised from Scripts Gallery).</summary>
+    private void LoadScriptContent(string code)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            CodeEditor.Text = string.IsNullOrEmpty(code) ? DefaultTemplate : code;
+            StatusText.Text = string.IsNullOrEmpty(code) ? "New script" : "Loaded from gallery";
+        });
     }
 
     private void ToggleWordWrap_Click(object sender, RoutedEventArgs e)

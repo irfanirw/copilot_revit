@@ -1,10 +1,13 @@
 using Autodesk.Revit.UI;
 using RevCode.Core;
 using RevCode.UI;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Media.Imaging;
+
+
 
 namespace RevCode;
 
@@ -12,6 +15,17 @@ public class App : IExternalApplication
 {
     internal static ExternalEvent? ExternalEvent { get; private set; }
     internal static CodeExecutionHandler? ExecutionHandler { get; private set; }
+
+    /// <summary>Folder where gallery scripts (.cs files) are stored.</summary>
+    internal static string ScriptsFolder { get; } =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                     "RevCode", "Scripts");
+
+    /// <summary>Raised when the gallery requests a script to be loaded into the editor.</summary>
+    internal static event Action<string>? ScriptLoadRequested;
+
+    /// <summary>Load script content into the code editor pane.</summary>
+    internal static void RequestLoadScript(string code) => ScriptLoadRequested?.Invoke(code);
 
     // Register before any Roslyn types are resolved so that the CLR does not
     // load our bundled copies when Dynamo may already have loaded its own.
@@ -51,6 +65,9 @@ public class App : IExternalApplication
     {
         ExecutionHandler = new CodeExecutionHandler();
         ExternalEvent = ExternalEvent.Create(ExecutionHandler);
+
+        // Ensure scripts folder exists
+        Directory.CreateDirectory(ScriptsFolder);
 
         // Register a lightweight provider — CodeEditorPage (which loads AvalonEdit)
         // is created lazily the first time the pane is shown, not at Revit startup.
@@ -105,6 +122,151 @@ public class App : IExternalApplication
         };
 
         panel.AddItem(buttonData);
+
+        // ---- Scripts Gallery panel ----
+        CreateScriptsGalleryPanel(application, tabName, assemblyPath);
+    }
+
+    // ── Scripts Gallery panel ─────────────────────────────────────────────────
+
+    /// <summary>Maps ComboBoxMember.Name → file path (since Revit's ComboBoxMember has no AssociatedData).</summary>
+    private static readonly Dictionary<string, string> _comboMemberPaths = new(StringComparer.Ordinal);
+
+    /// <summary>The ribbon ComboBox used as the scripts dropdown. Kept for runtime reload.</summary>
+    internal static ComboBox? ScriptsComboBox { get; private set; }
+
+    private void CreateScriptsGalleryPanel(UIControlledApplication application, string tabName, string assemblyPath)
+    {
+        var galleryPanel = application.CreateRibbonPanel(tabName, "RevCode Scripts Gallery");
+
+        // ── ComboBox: dropdown list of saved scripts ──
+        var combo = (ComboBox)galleryPanel.AddItem(new ComboBoxData("RevCodeScriptsCombo"));
+        combo.ToolTip = "Select a saved script to load its code into the editor";
+        ScriptsComboBox = combo;
+        PopulateScriptsCombo(combo);
+        combo.CurrentChanged += OnScriptSelected;
+
+        // ── Three stacked action buttons ──
+        galleryPanel.AddStackedItems(
+            new PushButtonData("RevCodeGalleryNew", "New Script", assemblyPath,
+                               "RevCode.Commands.NewScriptCommand")
+            {
+                ToolTip = "Open the code editor with a blank script",
+                Image = LoadEmbeddedImage("RevCode.Resources.icon16.png"),
+            },
+            new PushButtonData("RevCodeGalleryReload", "Reload Scripts", assemblyPath,
+                               "RevCode.Commands.ReloadScriptsCommand")
+            {
+                ToolTip = "Refresh the dropdown with the latest scripts from the scripts folder",
+                Image = LoadEmbeddedImage("RevCode.Resources.icon16.png"),
+            },
+            new PushButtonData("RevCodeGalleryManage", "Manage Gallery", assemblyPath,
+                               "RevCode.Commands.ShowScriptsGalleryCommand")
+            {
+                ToolTip = "Open Scripts Gallery to run, load, or delete saved scripts",
+                Image = LoadEmbeddedImage("RevCode.Resources.icon16.png"),
+            });
+    }
+
+    /// <summary>Populates (or refreshes) the ComboBox from the scripts folder.</summary>
+    internal static void PopulateScriptsCombo(ComboBox combo)
+    {
+        var scripts = Directory.Exists(ScriptsFolder)
+            ? Directory.GetFiles(ScriptsFolder, "*.cs", SearchOption.TopDirectoryOnly)
+                       .OrderByDescending(f => File.GetLastWriteTime(f))
+                       .ToArray()
+            : Array.Empty<string>();
+
+        // Update slot map
+        for (int i = 0; i < ScriptSlots.Length; i++)
+            ScriptSlots[i] = i < scripts.Length ? scripts[i] : null;
+
+        // Build set of names already in the combo so we skip duplicates
+        var existingNames = new HashSet<string>(
+            combo.GetItems().Select(m => m.Name), StringComparer.Ordinal);
+
+        // Refresh ItemText for existing members; mark deleted ones
+        foreach (var member in combo.GetItems())
+        {
+            if (_comboMemberPaths.TryGetValue(member.Name, out var p))
+            {
+                member.ItemText = File.Exists(p)
+                    ? Path.GetFileNameWithoutExtension(p)
+                    : $"(removed) {member.ItemText}";
+            }
+        }
+
+        // Add newly discovered scripts that don't yet have a member
+        var trackedPaths = new HashSet<string>(_comboMemberPaths.Values, StringComparer.OrdinalIgnoreCase);
+        foreach (var path in scripts.Where(p => !trackedPaths.Contains(p)))
+        {
+            var baseName = Path.GetFileNameWithoutExtension(path);
+            var memberName = $"RCS_{baseName}";
+
+            // Ensure unique member name (append counter if collides)
+            int suffix = 0;
+            while (existingNames.Contains(memberName))
+                memberName = $"RCS_{baseName}_{++suffix}";
+
+            try
+            {
+                combo.AddItem(new ComboBoxMemberData(memberName, baseName));
+                _comboMemberPaths[memberName] = path;
+                existingNames.Add(memberName);
+            }
+            catch { /* ignore, already added */ }
+        }
+    }
+
+    /// <summary>Reloads the scripts ComboBox from the scripts folder (called by ReloadScriptsCommand).</summary>
+    internal static int ReloadScripts()
+    {
+        if (ScriptsComboBox is not null)
+            PopulateScriptsCombo(ScriptsComboBox);
+
+        // Count live scripts (paths that still exist on disk)
+        return _comboMemberPaths.Values.Count(File.Exists);
+    }
+
+    /// <summary>Fired when the user selects an item in the scripts ComboBox.</summary>
+    private static void OnScriptSelected(object? sender, EventArgs e)
+    {
+        if (sender is not ComboBox combo) return;
+        var memberName = combo.Current?.Name;
+        if (memberName is null) return;
+        if (!_comboMemberPaths.TryGetValue(memberName, out var path) || !File.Exists(path)) return;
+
+        try
+        {
+            var code = File.ReadAllText(path);
+            RequestLoadScript(code);
+        }
+        catch { /* silently ignore read errors */ }
+    }
+
+
+    /// <summary>Stores script file paths assigned to pulldown button slots at startup.</summary>
+    internal static readonly string?[] ScriptSlots = new string?[12];
+
+    /// <summary>Executes the script at the given slot index (called by RunScriptSlotNN commands).</summary>
+    internal static void RunScriptAtSlot(int slot, UIApplication uiApp, Action<string, bool> callback)
+    {
+        var path = slot < ScriptSlots.Length ? ScriptSlots[slot] : null;
+        if (path == null || !File.Exists(path))
+        {
+            callback("Script file not found. Reopen Revit to refresh the gallery.", false);
+            return;
+        }
+
+        InitializeEditorPage(uiApp);
+        var code = File.ReadAllText(path);
+
+        var handler = ExecutionHandler;
+        var externalEvent = ExternalEvent;
+        if (handler == null || externalEvent == null) { callback("Execution handler not initialized.", false); return; }
+
+        handler.SetCode(code, callback);
+        externalEvent.Raise();
     }
 
     private static BitmapImage? LoadEmbeddedImage(string resourceName)

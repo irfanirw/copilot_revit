@@ -4,17 +4,17 @@
 library
 C#
 .cs
-C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Release\
+c:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\obj\Release\
 RevCode
 none
 false
 TRACE;RELEASE;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 
-11429787561
+2-1766981906
 
-6724075674
+1111428718
 213-35430269
-UI\CodeEditorPage.xaml;
+UI\CodeEditorPage.xaml;UI\ScriptsGalleryWindow.xaml;
 
 False
 

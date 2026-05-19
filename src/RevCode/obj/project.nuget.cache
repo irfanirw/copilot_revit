@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mvq/bvlq4MA=",
+  "dgSpecHash": "OpsUu86Q0Rk=",
   "success": true,
-  "projectFilePath": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
+  "projectFilePath": "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\iirwanuddin\\.nuget\\packages\\avalonedit\\6.3.1.120\\avalonedit.6.3.1.120.nupkg.sha512",
     "C:\\Users\\iirwanuddin\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.4\\microsoft.codeanalysis.analyzers.3.3.4.nupkg.sha512",

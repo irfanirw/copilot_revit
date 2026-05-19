@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {}
+    "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {}
   },
   "projects": {
-    "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {
+    "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
+        "projectUniqueName": "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
         "projectName": "RevCode",
-        "projectPath": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
+        "projectPath": "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
         "packagesPath": "C:\\Users\\iirwanuddin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\obj\\",
+        "outputPath": "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\iirwanuddin\\AppData\\Roaming\\NuGet\\NuGet.Config"

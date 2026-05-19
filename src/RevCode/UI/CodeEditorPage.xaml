@@ -107,6 +107,11 @@
                             Style="{StaticResource ToolbarButton}"
                             Click="SaveCode_Click"
                             ToolTip="Save code to a .cs file"/>
+                    <Button Content="&#x2B50; Gallery" 
+                            Style="{StaticResource ToolbarButton}"
+                            Background="#313244" Foreground="#89B4FA"
+                            Click="SaveToGallery_Click"
+                            ToolTip="Save code to the RevCode Scripts Gallery"/>
                     <Button Content="&#x1F4C2; Load" 
                             Style="{StaticResource ToolbarButton}"
                             Click="LoadCode_Click"

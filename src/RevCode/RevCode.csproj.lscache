@@ -54,14 +54,21 @@ TemporaryDependencyNodeTargetIdentifier=net8.0-windows
 
 [sourceFiles]
 App.cs
-Commands/ShowEditorCommand.cs
+Commands/
+ NewScriptCommand.cs
+ ReloadScriptsCommand.cs
+ RunScriptSlotCommands.cs
+ ShowEditorCommand.cs
+ ShowScriptsGalleryCommand.cs
 Core/CodeExecutionHandler.cs
 obj/Debug/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  RevCode.AssemblyInfo.cs
  RevCode.GlobalUsings.g.cs
 Services/CodeCompiler.cs
-UI/CodeEditorPage.xaml.cs
+UI/
+ CodeEditorPage.xaml.cs
+ ScriptsGalleryWindow.xaml.cs
 
 [metadataReferences]
 ../../../../../../../../../../Program Files/Autodesk/Revit 2025/
