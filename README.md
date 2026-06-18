@@ -101,7 +101,27 @@ copilot_revit/
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### ⚡ Quick Install (Remote — no download needed)
+
+Install RevCode directly from a **Command Prompt** or **PowerShell** terminal with a single command — no manual file download required.
+
+**Command Prompt (CMD):**
+
+```cmd
+powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1')"
+```
+
+**PowerShell:**
+
+```powershell
+iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1')
+```
+
+> The script downloads the package from GitHub, extracts it to a temporary folder, runs the installer, and cleans up — no admin privileges required.
+
+---
+
+### Prerequisites (for building from source)
 
 | Requirement | Version |
 |---|---|
@@ -115,7 +135,7 @@ copilot_revit/
 dotnet build RevAI.sln -c Release
 ```
 
-### Install
+### Install (local)
 
 Run the included PowerShell installer (no admin privileges needed):
 
