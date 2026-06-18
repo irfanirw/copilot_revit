@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {}
+    "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {}
   },
   "projects": {
-    "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {
+    "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
+        "projectUniqueName": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
         "projectName": "RevCode",
-        "projectPath": "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
+        "projectPath": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
         "packagesPath": "C:\\Users\\iirwanuddin\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\obj\\",
+        "outputPath": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\iirwanuddin\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -71,15 +71,15 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.26, 8.0.26]"
+              "version": "[8.0.28, 8.0.28]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.26, 8.0.26]"
+              "version": "[8.0.28, 8.0.28]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.26, 8.0.26]"
+              "version": "[8.0.28, 8.0.28]"
             }
           ],
           "frameworkReferences": {
@@ -90,7 +90,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

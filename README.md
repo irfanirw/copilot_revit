@@ -103,21 +103,32 @@ copilot_revit/
 
 ### ⚡ Quick Install (Remote — no download needed)
 
-Install RevCode directly from a **Command Prompt** or **PowerShell** terminal with a single command — no manual file download required.
+Install directly from a **Command Prompt** or **PowerShell** terminal — no manual file download required. No admin privileges needed.
 
-**Command Prompt (CMD):**
+#### Install all plugins (recommended)
 
+**CMD:**
 ```cmd
-powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1')"
+powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-All-Remote.ps1')"
 ```
-
 **PowerShell:**
-
 ```powershell
-iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1')
+iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-All-Remote.ps1')
 ```
 
-> The script downloads the package from GitHub, extracts it to a temporary folder, runs the installer, and cleans up — no admin privileges required.
+> A menu will prompt you to choose: **RevCode**, **RevAI**, **RevCopilot**, or **All three**.
+
+---
+
+#### Install individual plugins
+
+| Plugin | CMD one-liner |
+|---|---|
+| **RevCode** | `powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1')"` |
+| **RevAI** | `powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1')"` |
+| **RevCopilot** | `powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCopilot-Remote.ps1')"` |
+
+> Each script downloads the package from GitHub, runs the installer, and cleans up automatically.
 
 ---
 
