@@ -42,12 +42,17 @@ function Test-RevitRunning {
     $revit = Get-Process -Name "Revit" -ErrorAction SilentlyContinue
     if ($revit) {
         Write-Host "  [!] Revit is currently running." -ForegroundColor Yellow
-        Write-Host "      Please close Revit and try again." -ForegroundColor Yellow
+        Write-Host "      Files may be locked if a previous version is loaded." -ForegroundColor Yellow
+        Write-Host "      Changes will take effect after restarting Revit." -ForegroundColor Yellow
         Write-Host ""
         if (-not $Silent) {
-            Read-Host "  Press Enter to exit"
+            $choice = Read-Host "  Continue anyway? (y/N)"
+            if ($choice -notin @("Y", "y", "yes")) {
+                Write-Host "  Installation cancelled." -ForegroundColor Yellow
+                exit 0
+            }
+            Write-Host ""
         }
-        exit 1
     }
 }
 
