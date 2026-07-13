@@ -99,29 +99,29 @@
                             Background="#A6E3A1" Foreground="#1E1E2E"
                             FontWeight="Bold"
                             Click="RunCode_Click"/>
-                    <Button Content="&#x1F4CB; Paste" 
+                    <Button Content="&#x1F4CB; Paste"
                             Style="{StaticResource ToolbarButton}"
                             Click="PasteCode_Click"
                             ToolTip="Replace editor content with clipboard text"/>
-                    <Button Content="&#x1F4BE; Save" 
-                            Style="{StaticResource ToolbarButton}"
-                            Click="SaveCode_Click"
-                            ToolTip="Save code to a .cs file"/>
-                    <Button Content="&#x2B50; Gallery" 
+                    <Button Content="&#x2B50; Gallery"
                             Style="{StaticResource ToolbarButton}"
                             Background="#313244" Foreground="#89B4FA"
                             Click="SaveToGallery_Click"
                             ToolTip="Save code to the RevCode Scripts Gallery"/>
-                    <Button Content="&#x1F4C2; Load" 
+                    <Button Content="Clear Out"
+                            Style="{StaticResource ToolbarButton}"
+                            Click="ClearOutput_Click"/>
+                    <Button Content="Clear Code"
+                            Style="{StaticResource ToolbarButton}"
+                            Click="ClearCode_Click"/>
+                    <Button Content="&#x1F4BE; Save"
+                            Style="{StaticResource ToolbarButton}"
+                            Click="SaveCode_Click"
+                            ToolTip="Save code to a .cs file"/>
+                    <Button Content="&#x1F4C2; Load"
                             Style="{StaticResource ToolbarButton}"
                             Click="LoadCode_Click"
                             ToolTip="Load code from a .cs file"/>
-                    <Button Content="Clear Out" 
-                            Style="{StaticResource ToolbarButton}"
-                            Click="ClearOutput_Click"/>
-                    <Button Content="Clear Code" 
-                            Style="{StaticResource ToolbarButton}"
-                            Click="ClearCode_Click"/>
                     <ToggleButton x:Name="WordWrapButton" Content="&#x21B5; Wrap"
                                   Style="{StaticResource ToolbarToggleButton}"
                                   Click="ToggleWordWrap_Click"
