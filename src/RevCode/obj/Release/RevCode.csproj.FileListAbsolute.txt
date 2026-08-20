@@ -51,3 +51,8 @@ c:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\cop
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\01_Selection_GetSelectedElements.cs
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\02_Basic_GetDocumentInfo.cs
 C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\03_Views_ListViews.cs
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\04_Selection_SelectByCategory.cs
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\05_Levels_ListLevels.cs
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\06_Parameters_ListElementParameters.cs
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\07_Views_ListSheets.cs
+C:\Users\iirwanuddin\OneDrive - Exyte\Documents\Exyte\04_RND\10_CopilotRevit\copilot_revit\src\RevCode\bin\Release\DefaultScripts\08_Document_FindWarnings.cs

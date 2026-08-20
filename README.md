@@ -25,7 +25,8 @@ A dual-plugin solution for **Autodesk Revit 2025** that brings AI-powered code g
 - **Immediate execution** — press **F5** to compile and run
 - **Line numbers & output panel** — track your position and see results in real time
 - **Flexible entry points** — use `GeneratedCommand.Execute`, any `Execute(UIApplication)`, or `Run(UIApplication)` method
-- **Code templates** — start from a ready-made skeleton
+- **Template default scripts** — all sample scripts in `%APPDATA%\RevCode\Scripts` are treated as default reusable templates, not just a fixed three-file starter set
+- **Script gallery** — browse, load, run, and manage saved scripts from the Revit ribbon
 
 ### Shared
 
@@ -72,6 +73,11 @@ Result String → displayed in Chat or Output Panel
 copilot_revit/
 ├── RevAI.sln                      # Visual Studio solution (2 projects)
 ├── Install-RevAI.ps1              # No-admin installer / uninstaller
+├── Install-RevCode.ps1            # RevCode installer / uninstaller
+├── Install-RevAI-Remote.ps1       # Remote installer for RevAI
+├── Install-RevCode-Remote.ps1     # Remote installer for RevCode
+├── Install-RevCopilot-Remote.ps1  # Remote installer for RevCopilot
+├── Install-All-Remote.ps1         # Unified remote install / uninstall flow
 ├── LICENSE                        # MIT License
 │
 └── src/
@@ -90,10 +96,11 @@ copilot_revit/
         ├── App.cs                 # Revit IExternalApplication entry point
         ├── RevCode.csproj         # .NET 8.0, Roslyn
         ├── RevCode.addin          # Revit add-in manifest
-        ├── Commands/              # ShowEditorCommand
+        ├── DefaultScripts/        # Built-in template scripts copied to %APPDATA%\RevCode\Scripts
+        ├── Commands/              # ShowEditorCommand, gallery commands
         ├── Core/                  # CodeExecutionHandler
         ├── Services/              # CodeCompiler (flexible entry points)
-        ├── UI/                    # CodeEditorWindow (WPF)
+        ├── UI/                    # CodeEditorPage, ScriptsGalleryWindow
         └── Resources/             # Icons
 ```
 
@@ -151,9 +158,9 @@ dotnet build RevAI.sln -c Release
 Run the included PowerShell installer (no admin privileges needed):
 
 ```powershell
-# Right-click Install-RevAI.ps1 → "Run with PowerShell"
+# Right-click Install-RevCode.ps1 → "Run with PowerShell"
 # or:
-powershell -ExecutionPolicy Bypass -File Install-RevAI.ps1
+powershell -ExecutionPolicy Bypass -File Install-RevCode.ps1
 ```
 
 The installer copies the built DLLs and `.addin` manifests into:
@@ -162,10 +169,24 @@ The installer copies the built DLLs and `.addin` manifests into:
 %APPDATA%\Autodesk\Revit\Addins\2025\
 ```
 
+Default script templates are seeded into:
+
+```
+%APPDATA%\RevCode\Scripts\
+```
+
+This folder acts as the default template library, and the gallery loads all `.cs` files found there.
+
 ### Uninstall
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File Install-RevAI.ps1 -Uninstall
+powershell -ExecutionPolicy Bypass -File Install-RevCode.ps1 -Uninstall
+```
+
+Remote uninstall is also supported:
+
+```powershell
+powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1') -Uninstall"
 ```
 
 ---
