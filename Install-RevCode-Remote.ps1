@@ -10,9 +10,13 @@
 #  One-liner usage (Command Prompt / any terminal):
 #    powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1')"
 #
-#  To uninstall, run the local installer with -Uninstall after installation.
+#  To uninstall remotely, run this script with -Uninstall.
 #
 # ============================================================
+
+param(
+    [switch]$Uninstall
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -25,7 +29,11 @@ $PackageDir = "RevCode_v1.0.0"
 # ---- Banner ----
 Write-Host ""
 Write-Host "  ======================================" -ForegroundColor Cyan
-Write-Host "    RevCode - Remote Installer"           -ForegroundColor Cyan
+if ($Uninstall) {
+    Write-Host "    RevCode - Remote Uninstaller"         -ForegroundColor Cyan
+} else {
+    Write-Host "    RevCode - Remote Installer"           -ForegroundColor Cyan
+}
 Write-Host "    github.com/$RepoOwner/$RepoName"      -ForegroundColor Cyan
 Write-Host "  ======================================" -ForegroundColor Cyan
 Write-Host ""
@@ -98,11 +106,15 @@ try {
 
     Write-Host "  [OK]  Extraction complete." -ForegroundColor Green
 
-    # ---- Step 3: Run the installer ----
-    Write-Host "  [3/3] Running installer..." -ForegroundColor Cyan
+    # ---- Step 3: Run the installer or uninstaller ----
+    Write-Host "  [3/3] Running $(if ($Uninstall) { 'uninstaller' } else { 'installer' })..." -ForegroundColor Cyan
     Write-Host ""
 
-    & powershell.exe -ExecutionPolicy Bypass -File $InstallerScript
+    if ($Uninstall) {
+        & powershell.exe -ExecutionPolicy Bypass -File $InstallerScript -Uninstall
+    } else {
+        & powershell.exe -ExecutionPolicy Bypass -File $InstallerScript
+    }
 
 } finally {
     # ---- Cleanup temp files ----

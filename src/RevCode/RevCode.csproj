@@ -49,9 +49,13 @@
     <EmbeddedResource Include="Resources\icon16.png" />
   </ItemGroup>
 
-  <!-- Copy .addin manifest to output -->
+  <!-- Copy .addin manifest and default sample scripts to output -->
   <ItemGroup>
+    <Compile Remove="DefaultScripts\*.cs" />
     <None Include="RevCode.addin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="DefaultScripts\*.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

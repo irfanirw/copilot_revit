@@ -66,8 +66,7 @@ public class App : IExternalApplication
         ExecutionHandler = new CodeExecutionHandler();
         ExternalEvent = ExternalEvent.Create(ExecutionHandler);
 
-        // Ensure scripts folder exists
-        Directory.CreateDirectory(ScriptsFolder);
+        EnsureDefaultScripts();
 
         // Register a lightweight provider — CodeEditorPage (which loads AvalonEdit)
         // is created lazily the first time the pane is shown, not at Revit startup.
@@ -86,10 +85,33 @@ public class App : IExternalApplication
         _lazyProvider?.SetUiApp(uiApp);
     }
 
+    private static void EnsureDefaultScripts()
+    {
+        Directory.CreateDirectory(ScriptsFolder);
+
+        string assemblyDir = Path.GetDirectoryName(typeof(App).Assembly.Location)!;
+        string defaultScriptsDir = Path.Combine(assemblyDir, "DefaultScripts");
+        if (!Directory.Exists(defaultScriptsDir)) return;
+
+        foreach (var file in Directory.GetFiles(defaultScriptsDir, "*.cs", SearchOption.TopDirectoryOnly))
+        {
+            string target = Path.Combine(ScriptsFolder, Path.GetFileName(file));
+            if (!File.Exists(target))
+                File.Copy(file, target);
+        }
+    }
+
     public Result OnShutdown(UIControlledApplication application)
     {
         ExternalEvent?.Dispose();
         return Result.Succeeded;
+    }
+
+    private static RibbonPanel GetOrCreateRibbonPanel(UIControlledApplication application, string tabName, string panelName)
+    {
+        var existing = application.GetRibbonPanels(tabName)
+            .FirstOrDefault(p => string.Equals(p.Name, panelName, StringComparison.Ordinal));
+        return existing ?? application.CreateRibbonPanel(tabName, panelName);
     }
 
     private void CreateRibbonUI(UIControlledApplication application)
@@ -105,7 +127,7 @@ public class App : IExternalApplication
             // Tab may already exist (shared with RevAI)
         }
 
-        var panel = application.CreateRibbonPanel(tabName, "Code Editor");
+        var panel = GetOrCreateRibbonPanel(application, tabName, "Code Editor");
 
         string assemblyPath = Assembly.GetExecutingAssembly().Location;
 
@@ -137,7 +159,7 @@ public class App : IExternalApplication
 
     private void CreateScriptsGalleryPanel(UIControlledApplication application, string tabName, string assemblyPath)
     {
-        var galleryPanel = application.CreateRibbonPanel(tabName, "RevCode Scripts Gallery");
+        var galleryPanel = GetOrCreateRibbonPanel(application, tabName, "RevCode Scripts Gallery");
 
         // ── ComboBox: dropdown list of saved scripts ──
         var combo = (ComboBox)galleryPanel.AddItem(new ComboBoxData("RevCodeScriptsCombo"));

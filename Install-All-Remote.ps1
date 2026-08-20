@@ -1,6 +1,6 @@
 # ============================================================
 #  RevAI Platform - Unified Remote Installer
-#  Installs RevCode, RevAI, and/or RevCopilot from GitHub.
+#  Installs or uninstalls RevCode, RevAI, and/or RevCopilot from GitHub.
 #  Author: Irfan Irwanuddin
 # ============================================================
 #
@@ -10,7 +10,13 @@
 #  One-liner usage (Command Prompt / any terminal):
 #    powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-All-Remote.ps1')"
 #
+#  To uninstall remotely: use the same script and pass -Uninstall.
+#
 # ============================================================
+
+param(
+    [switch]$Uninstall
+)
 
 $ErrorActionPreference = 'Stop'
 
@@ -52,7 +58,11 @@ function Test-RevitNotRunning {
 # ---- Banner ----
 Write-Host ''
 Write-Host '  ============================================' -ForegroundColor Cyan
-Write-Host '    RevAI Platform - Remote Installer' -ForegroundColor Cyan
+if ($Uninstall) {
+    Write-Host '    RevAI Platform - Remote Uninstaller' -ForegroundColor Cyan
+} else {
+    Write-Host '    RevAI Platform - Remote Installer' -ForegroundColor Cyan
+}
 Write-Host '    github.com/$RepoOwner/$RepoName' -ForegroundColor Cyan
 Write-Host '  ============================================' -ForegroundColor Cyan
 Write-Host ''
@@ -143,19 +153,30 @@ try {
             continue
         }
 
-        Write-Host "  ---- Installing $PluginName ----" -ForegroundColor Cyan
-        & powershell.exe -ExecutionPolicy Bypass -File $InstallerScript -Silent
+        if ($Uninstall) {
+            Write-Host "  ---- Uninstalling $PluginName ----" -ForegroundColor Cyan
+            & powershell.exe -ExecutionPolicy Bypass -File $InstallerScript -Silent -Uninstall
+        } else {
+            Write-Host "  ---- Installing $PluginName ----" -ForegroundColor Cyan
+            & powershell.exe -ExecutionPolicy Bypass -File $InstallerScript -Silent
+        }
         Write-Host ''
     }
 
     # ---- Summary ----
     Write-Host '  ============================================' -ForegroundColor Green
-    Write-Host '    All selected plugins installed!' -ForegroundColor Green
+    if ($Uninstall) {
+        Write-Host '    All selected plugins uninstalled!' -ForegroundColor Green
+    } else {
+        Write-Host '    All selected plugins installed!' -ForegroundColor Green
+    }
     Write-Host '  ============================================' -ForegroundColor Green
     Write-Host ''
-    Write-Host '  Launch Revit 2025 — plugins appear under the' -ForegroundColor White
-    Write-Host "  'Code & Automations' ribbon tab." -ForegroundColor White
-    Write-Host ''
+    if (-not $Uninstall) {
+        Write-Host '  Launch Revit 2025 — plugins appear under the' -ForegroundColor White
+        Write-Host "  'Code & Automations' ribbon tab." -ForegroundColor White
+        Write-Host ''
+    }
 }
 finally {
     # ---- Cleanup temp files ----
