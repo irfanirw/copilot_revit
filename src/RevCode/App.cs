@@ -146,7 +146,16 @@ public class App : IExternalApplication
         panel.AddItem(buttonData);
 
         // ---- Scripts Gallery panel ----
-        CreateScriptsGalleryPanel(application, tabName, assemblyPath);
+        try
+        {
+            CreateScriptsGalleryPanel(application, tabName, assemblyPath);
+        }
+        catch (Exception ex)
+        {
+            // Surface the failure as a Revit task dialog so it is not swallowed silently
+            TaskDialog.Show("RevCode – Gallery Setup Error",
+                $"The Scripts Gallery panel could not be created.\n\n{ex.Message}\n\nThe Code Editor is still available.");
+        }
     }
 
     // ── Scripts Gallery panel ─────────────────────────────────────────────────

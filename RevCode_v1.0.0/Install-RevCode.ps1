@@ -159,7 +159,26 @@ if (Test-Path $sourceAddin) {
 }
 Write-Host "  [OK] Installed addin manifest" -ForegroundColor Green
 
-# Step 5: Sign the DLL if code signing cert is available
+# Step 5: Seed default script gallery files into the user script folder
+$defaultScriptDir = Join-Path $SourceDir 'DefaultScripts'
+$scriptUserFolder = Join-Path $env:APPDATA 'RevCode\Scripts'
+if (-not (Test-Path $scriptUserFolder)) {
+    New-Item -ItemType Directory -Path $scriptUserFolder -Force | Out-Null
+}
+
+if (Test-Path $defaultScriptDir) {
+    $existingFiles = Get-ChildItem -Path $scriptUserFolder -Filter '*.cs' -ErrorAction SilentlyContinue
+    if (-not $existingFiles -or $existingFiles.Count -eq 0) {
+        Copy-Item (Join-Path $defaultScriptDir '*.cs') -Destination $scriptUserFolder -Force
+        Write-Host "  [OK] Seeded default scripts to $scriptUserFolder" -ForegroundColor Green
+    } else {
+        Write-Host "  [--] Existing user scripts preserved; default scripts were not overwritten" -ForegroundColor DarkGray
+    }
+} else {
+    Write-Host "  [--] Default scripts folder not found; gallery will start empty" -ForegroundColor DarkGray
+}
+
+# Step 6: Sign the DLL if code signing cert is available
 $cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert -ErrorAction SilentlyContinue |
     Where-Object { $_.Subject -like "*Irfan Irwanuddin*" } |
     Select-Object -First 1
