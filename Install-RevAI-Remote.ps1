@@ -5,12 +5,13 @@
 # ============================================================
 #
 #  One-liner usage (PowerShell):
-#    iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1')
+#    & ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1').Content))
 #
 #  One-liner usage (Command Prompt / any terminal):
-#    powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1')"
+#    powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1').Content))"
 #
-#  To uninstall remotely, run this script with -Uninstall.
+#  To uninstall remotely, pass -Uninstall to the scriptblock invocation:
+#    powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1').Content)) -Uninstall"
 #
 # ============================================================
 

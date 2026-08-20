@@ -116,11 +116,11 @@ Install directly from a **Command Prompt** or **PowerShell** terminal — no man
 
 **CMD:**
 ```cmd
-powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-All-Remote.ps1')"
+powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-All-Remote.ps1').Content))"
 ```
 **PowerShell:**
 ```powershell
-iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-All-Remote.ps1')
+& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-All-Remote.ps1').Content))
 ```
 
 > A menu will prompt you to choose: **RevCode**, **RevAI**, **RevCopilot**, or **All three**.
@@ -131,9 +131,9 @@ iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-
 
 | Plugin | CMD one-liner |
 |---|---|
-| **RevCode** | `powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1')"` |
-| **RevAI** | `powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1')"` |
-| **RevCopilot** | `powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCopilot-Remote.ps1')"` |
+| **RevCode** | `powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1').Content))"` |
+| **RevAI** | `powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevAI-Remote.ps1').Content))"` |
+| **RevCopilot** | `powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCopilot-Remote.ps1').Content))"` |
 
 > Each script downloads the package from GitHub, runs the installer, and cleans up automatically.
 
@@ -183,10 +183,10 @@ This folder acts as the default template library, and the gallery loads all `.cs
 powershell -ExecutionPolicy Bypass -File Install-RevCode.ps1 -Uninstall
 ```
 
-Remote uninstall is also supported:
+Remote uninstall is also supported, but the switch must be passed to the downloaded script block rather than to `Invoke-Expression`:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -Command "iex (irm 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1') -Uninstall"
+powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/irfanirw/copilot_revit/main/Install-RevCode-Remote.ps1').Content)) -Uninstall"
 ```
 
 ---
