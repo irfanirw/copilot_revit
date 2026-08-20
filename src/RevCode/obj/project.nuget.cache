@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "RGKl5nE+vE8=",
+  "dgSpecHash": "9mA1i9IFKd4=",
   "success": true,
   "projectFilePath": "C:\\Users\\iirwanuddin\\OneDrive - Exyte\\Documents\\Exyte\\04_RND\\10_CopilotRevit\\copilot_revit\\src\\RevCode\\RevCode.csproj",
   "expectedPackageFiles": [
@@ -11,9 +11,9 @@
     "C:\\Users\\iirwanuddin\\.nuget\\packages\\system.collections.immutable\\8.0.0\\system.collections.immutable.8.0.0.nupkg.sha512",
     "C:\\Users\\iirwanuddin\\.nuget\\packages\\system.reflection.metadata\\8.0.0\\system.reflection.metadata.8.0.0.nupkg.sha512",
     "C:\\Users\\iirwanuddin\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-    "C:\\Users\\iirwanuddin\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.28\\microsoft.netcore.app.ref.8.0.28.nupkg.sha512",
-    "C:\\Users\\iirwanuddin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.28\\microsoft.windowsdesktop.app.ref.8.0.28.nupkg.sha512",
-    "C:\\Users\\iirwanuddin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.28\\microsoft.aspnetcore.app.ref.8.0.28.nupkg.sha512"
+    "C:\\Users\\iirwanuddin\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.30\\microsoft.netcore.app.ref.8.0.30.nupkg.sha512",
+    "C:\\Users\\iirwanuddin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.30\\microsoft.windowsdesktop.app.ref.8.0.30.nupkg.sha512",
+    "C:\\Users\\iirwanuddin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.30\\microsoft.aspnetcore.app.ref.8.0.30.nupkg.sha512"
   ],
   "logs": []
 }

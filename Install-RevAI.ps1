@@ -39,20 +39,29 @@ function Write-Banner {
 }
 
 function Test-RevitRunning {
-    $revit = Get-Process -Name "Revit" -ErrorAction SilentlyContinue
-    if ($revit) {
-        Write-Host "  [!] Revit is currently running." -ForegroundColor Yellow
-        Write-Host "      Files may be locked if a previous version is loaded." -ForegroundColor Yellow
-        Write-Host "      Changes will take effect after restarting Revit." -ForegroundColor Yellow
-        Write-Host ""
-        if (-not $Silent) {
-            $choice = Read-Host "  Continue anyway? (y/N)"
-            if ($choice -notin @("Y", "y", "yes")) {
-                Write-Host "  Installation cancelled." -ForegroundColor Yellow
-                exit 0
-            }
-            Write-Host ""
+    $revit = Get-Process -Name "Revit" -ErrorAction SilentlyContinue |
+        Where-Object { $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }
+
+    if (-not $revit) { return }
+
+    for ($i = 0; $i -lt 20; $i++) {
+        Start-Sleep -Seconds 1
+        $revit = Get-Process -Name "Revit" -ErrorAction SilentlyContinue |
+            Where-Object { $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }
+        if (-not $revit) { return }
+    }
+
+    Write-Host "  [!] Revit is currently running or has not fully closed yet." -ForegroundColor Yellow
+    Write-Host "      Files may be locked if a previous version is loaded." -ForegroundColor Yellow
+    Write-Host "      Changes will take effect after restarting Revit." -ForegroundColor Yellow
+    Write-Host ""
+    if (-not $Silent) {
+        $choice = Read-Host "  Continue anyway? (y/N)"
+        if ($choice -notin @("Y", "y", "yes")) {
+            Write-Host "  Installation cancelled." -ForegroundColor Yellow
+            exit 0
         }
+        Write-Host ""
     }
 }
 

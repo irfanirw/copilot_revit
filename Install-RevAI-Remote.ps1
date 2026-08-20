@@ -31,9 +31,20 @@ Write-Host "  ======================================" -ForegroundColor Cyan
 Write-Host ""
 
 # ---- Check Revit is not running ----
-$revit = Get-Process -Name "Revit" -ErrorAction SilentlyContinue
+$revit = Get-Process -Name "Revit" -ErrorAction SilentlyContinue |
+    Where-Object { $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }
+
 if ($revit) {
-    Write-Host "  [!] Revit is currently running." -ForegroundColor Yellow
+    for ($i = 0; $i -lt 20; $i++) {
+        Start-Sleep -Seconds 1
+        $revit = Get-Process -Name "Revit" -ErrorAction SilentlyContinue |
+            Where-Object { $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }
+        if (-not $revit) { break }
+    }
+}
+
+if ($revit) {
+    Write-Host "  [!] Revit is currently running or has not fully closed yet." -ForegroundColor Yellow
     Write-Host "      Please close Revit and try again." -ForegroundColor Yellow
     Write-Host ""
     Read-Host "  Press Enter to exit"
